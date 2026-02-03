@@ -1,5 +1,5 @@
 import { describe, expect, it} from "vitest";
-import { createAccount, deposit, DomainError } from "../src/domain/accountService.ts";
+import { createAccount, deposit, DomainError, withdraw } from "../src/domain/accountService.ts";
 
 describe("create account", () => {
     it("should create a normal acc with a welcome bonus", () => {
@@ -26,6 +26,41 @@ describe("deposit function", () => {
 
         expect(() => deposit(acc, 0)).toThrow(DomainError);
         expect(() => deposit(acc, -50)).toThrow(DomainError);
+    });
+});
+
+
+describe("withdraw function", () => {
+    it("should decrease the account balance for a valid withdrawal", () => {
+        let acc = createAccount("normal", "555-1111111-58", "Mr Big Buck");
+        acc = deposit(acc, 100); 
+        const updated = withdraw(acc, 50);
+
+        expect(updated.balance).toBe(60);
+        expect(acc.balance).toBe(110); 
+    });
+
+    it("should allow normal account to overdraft up to -500", () => {
+        const acc = createAccount("normal", "555-1111111-58", "Mr Big Buck");
+        const updated = withdraw(acc, 510); 
+
+        expect(updated.balance).toBe(-500);
+    });
+
+    it("should throw DomainError if normal account overdraft exceeds -500", () => {
+        const acc = createAccount("normal", "555-1111111-58", "Mr Big Buck");
+        expect(() => withdraw(acc, 520)).toThrow(DomainError);
+    });
+
+    it("should throw DomainError if savings account goes negative", () => {
+        const acc = createAccount("savings", "555-1111111-58", "Mr Big Buck");
+        expect(() => withdraw(acc, 1)).toThrow(DomainError);
+    });
+
+    it("should throw DomainError for zero or negative withdrawal amount", () => {
+        const acc = createAccount("normal", "555-1111111-58", "Mr Big Buck");
+        expect(() => withdraw(acc, 0)).toThrow(DomainError);
+        expect(() => withdraw(acc, -10)).toThrow(DomainError);
     });
 });
 
