@@ -52,3 +52,15 @@ export function withdraw(account: Account, amount: number): Account {
     return { ...account, balance: account.balance - amount };
 }
 
+export function transfer(
+    from: Account,
+    to: Account,
+    amount: number,
+): { from: Account, to: Account } {
+    const updatedFrom = withdraw(from, amount);
+    const updatedTo = deposit(to, amount);
+    return { from: updatedFrom, to: updatedTo }
+}
+
+ 
+
