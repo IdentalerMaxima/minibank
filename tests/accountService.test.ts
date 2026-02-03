@@ -1,5 +1,5 @@
 import { describe, expect, it} from "vitest";
-import { createAccount, deposit, DomainError, withdraw } from "../src/domain/accountService.ts";
+import { createAccount, deposit, DomainError, withdraw, transfer } from "../src/domain/accountService.ts";
 
 describe("create account", () => {
     it("should create a normal acc with a welcome bonus", () => {
@@ -64,4 +64,53 @@ describe("withdraw function", () => {
     });
 });
 
+describe("transfer function", () => {
+  it("should transfer money between two normal accounts", () => {
+    let from = createAccount("normal", "555-1111111-58", "Mr Big Buck");
+    let to = createAccount("normal", "555-3333333-10", "Ms Small Pocket");
 
+    from = deposit(from, 100); 
+    const result = transfer(from, to, 50);
+
+    expect(result.from.balance).toBe(60); 
+    expect(result.to.balance).toBe(60);  
+
+    expect(from.balance).toBe(110);
+    expect(to.balance).toBe(10);
+  });
+
+  it("should transfer money from normal to savings account", () => {
+    let from = createAccount("normal", "555-1111111-58", "Mr Big Buck");
+    let to = createAccount("savings", "555-3333333-10", "Ms Small Pocket");
+
+    from = deposit(from, 100); 
+    const result = transfer(from, to, 50);
+
+    expect(result.from.balance).toBe(60); 
+    expect(result.to.balance).toBe(50);   
+  });
+
+  it("should throw DomainError if transfer exceeds normal account overdraft", () => {
+    const from = createAccount("normal", "555-1111111-58", "Mr Big Buck"); 
+    const to = createAccount("normal", "555-3333333-10", "Ms Small Pocket");     
+
+    
+    expect(() => transfer(from, to, 520)).toThrow(DomainError);
+  });
+
+  it("should throw DomainError if transfer would make savings account negative", () => {
+    const from = createAccount("normal", "555-1111111-58", "Mr Big Buck"); 
+    const to = createAccount("savings", "555-3333333-10", "Ms Small Pocket");  
+
+    
+    expect(() => transfer(to, from, 1)).toThrow(DomainError);
+  });
+
+  it("should throw DomainError for zero or negative transfer amount", () => {
+    const from = createAccount("normal", "555-1111111-58", "Mr Big Buck");
+    const to = createAccount("normal", "555-3333333-10", "Ms Small Pocket");
+
+    expect(() => transfer(from, to, 0)).toThrow(DomainError);
+    expect(() => transfer(from, to, -50)).toThrow(DomainError);
+  });
+});
