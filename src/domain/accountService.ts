@@ -1,5 +1,12 @@
 import type { Account, NormalAccount, SavingsAccount } from "./Account";
 
+export class DomainError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "DomainError";
+    }
+}
+
 export function createAccount(
     type: "normal" | "savings",
     accountNumber: string,
@@ -24,4 +31,9 @@ export function createAccount(
         };
         return account;
     }
+}
+
+export function deposit(account: Account, amount: number): Account {
+    if (amount <= 0) throw new DomainError("Deposit amount must be positive");
+    return { ...account, balance: account.balance + amount };
 }
