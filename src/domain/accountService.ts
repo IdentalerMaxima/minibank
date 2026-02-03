@@ -37,3 +37,18 @@ export function deposit(account: Account, amount: number): Account {
     if (amount <= 0) throw new DomainError("Deposit amount must be positive");
     return { ...account, balance: account.balance + amount };
 }
+
+export function withdraw(account: Account, amount: number): Account {
+    if (amount <= 0) throw new DomainError("Withdraw amount must be positive");
+    
+    if (account.type === "normal" && account.balance - amount < -500) { //allowed overdraft, would change this to a dynamic val like welcome bonus
+        throw new DomainError("Normal account overdraft exceeded");
+    }
+    
+    if (account.type === "savings" && account.balance - amount < 0) { //no overdraft given for savings, could be shifted tho
+        throw new DomainError("Normal account overdraft exceeded");
+    }
+
+    return { ...account, balance: account.balance - amount };
+}
+
