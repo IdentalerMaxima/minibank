@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useReducer } from "react";
+import { appReducer } from "./app/reducer";
+import type { AppState } from "./app/state";
+import './App.css';
+
+const initialState: AppState = {
+  accounts: []
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [state, dispatch] = useReducer(appReducer, initialState);
 
   return (
     <>
+      <h1>MiniBank</h1>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button
+          onClick={() =>
+            dispatch({
+              type: "CREATE_ACCOUNT",
+              payload: { kind: "normal", accountNumber: "555-1111111-58", ownerName: "Mr Big Bucket" }
+            })
+          }
+        >
+          Create Normal Account
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+      <h2>Accounts</h2>
+      <ul>
+        {state.accounts.map(acc => (
+          <li key={acc.accountNumber}>
+            {acc.ownerName} ({acc.type}) - Balance: {acc.balance} EUR
+          </li>
+        ))}
+      </ul>
     </>
-  )
+  );
 }
+
 
 export default App
