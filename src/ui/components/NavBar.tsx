@@ -1,5 +1,7 @@
 type NavBarProps = { 
-    setPage: (page: string) => void;
+    setPage: (page:
+        "list" | "create" | "deposit" | "withdraw" | "transfer"
+    ) => void;
 }
 
 export function NavBar({ setPage }: NavBarProps) {
