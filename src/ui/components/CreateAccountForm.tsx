@@ -1,37 +1,37 @@
 import { useState, useEffect, type Dispatch } from "react";
 import type { Action } from "../../app/actions";
-import type { AppState } from "../../app/state";
 import './CreateAccountForm.css';
 
 type CreateAccountFormProps = {
-    state: AppState;
     dispatch: Dispatch<Action>;
+    stateError?: string; 
 };
 
-export function CreateAccountForm({ state, dispatch }: CreateAccountFormProps) {
+export function CreateAccountForm({ stateError, dispatch }: CreateAccountFormProps) {
     const [ownerName, setOwnerName] = useState("");
     const [accountNumber, setAccountNumber] = useState("");
     const [accountType, setAccountType] = useState<"normal" | "savings">("normal");
     const [success, setSuccess] = useState("");
+    const [lastAccount, setLastAccount] = useState("");
 
     useEffect(() => {
-        if (state.error) {
+        if (stateError) {
             setSuccess("");
         }
-    }, [state.error]);
+    }, [stateError]);
 
     useEffect(() => {
-        if (!state.error && accountNumber) {
-            setSuccess(`Account ${accountNumber} created successfully!`);
+        if (!stateError && lastAccount) {
+            setSuccess(`Account ${lastAccount} created successfully!`);
             setOwnerName("");
             setAccountNumber("");
             setAccountType("normal");
+            setLastAccount("");
         }
-    }, [state.error]);
+    }, [stateError, lastAccount]);
 
     const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         setSuccess("");
 
         dispatch({
@@ -42,6 +42,8 @@ export function CreateAccountForm({ state, dispatch }: CreateAccountFormProps) {
                 ownerName,
             },
         });
+
+        setLastAccount(accountNumber);
     };
 
     const accPattern = "\\d{3}-\\d{7}-\\d{2}";
@@ -84,11 +86,14 @@ export function CreateAccountForm({ state, dispatch }: CreateAccountFormProps) {
                 </select>
             </div>
 
-            {state.error && <div className="form-error">{state.error}</div>}
-
-            {success && <div className="form-success">{success}</div>}
-
             <button type="submit">Create Account!</button>
+
+            {stateError 
+                ? <div className="form-error">{stateError}</div>
+                : success 
+                    ? <div className="form-success">{success}</div>
+                    : null
+            }
         </form>
     );
 }
