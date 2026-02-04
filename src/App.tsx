@@ -5,6 +5,7 @@ import { appReducer } from "./app/reducer";
 import type { AppState } from "./app/state";
 import { DepositPage } from "./ui/pages/DepositPage";
 import { ListAllPage } from "./ui/pages/ListAllPage";
+import { WithdrawPage } from "./ui/pages/WithdrawPage";
 
 const initialState: AppState = { accounts: [] };
 
@@ -21,6 +22,7 @@ export function App() {
             {currentPage === "create" && <CreateAccountPage dispatch={dispatch} />}
             {currentPage === "deposit" && <DepositPage dispatch={dispatch} />}
             {currentPage === "list" && <ListAllPage accounts={state.accounts} />}
+            {currentPage === "withdraw" && <WithdrawPage dispatch={dispatch} />}
         </div>
     );
 }
