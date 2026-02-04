@@ -6,6 +6,7 @@ import type { AppState } from "./app/state";
 import { DepositPage } from "./ui/pages/DepositPage";
 import { ListAllPage } from "./ui/pages/ListAllPage";
 import { WithdrawPage } from "./ui/pages/WithdrawPage";
+import { TransferPage } from "./ui/pages/TransferPage";
 
 const initialState: AppState = { accounts: [] };
 
@@ -23,6 +24,7 @@ export function App() {
             {currentPage === "deposit" && <DepositPage dispatch={dispatch} />}
             {currentPage === "list" && <ListAllPage accounts={state.accounts} />}
             {currentPage === "withdraw" && <WithdrawPage dispatch={dispatch} />}
+            {currentPage === "transfer" && <TransferPage dispatch={dispatch} accounts={state.accounts} />}
         </div>
     );
 }
