@@ -29,8 +29,8 @@ export function ListAllPage({ accounts }: ListAllPageProps) {
                             <td>{account.accountNumber}</td>
                             <td>{account.ownerName}</td>
                             <td>{account.type}</td>
-                            <td>{account.balance}</td>
-                            <td>{getInterestRate(account)}</td>
+                            <td>{account.balance + " €"}</td>
+                            <td>{account.type === "savings" ? account.interestRate : "-"}</td>
                         </tr>
                     ))}
                 </tbody>
