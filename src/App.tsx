@@ -25,7 +25,7 @@ export function App() {
             {currentPage === "deposit" && <DepositPage stateError={state.error} dispatch={dispatch} />}
             {currentPage === "list" && <ListAllPage accounts={state.accounts} />}
             {currentPage === "withdraw" && <WithdrawPage stateError={state.error} dispatch={dispatch} />}
-            {currentPage === "transfer" && <TransferPage dispatch={dispatch} accounts={state.accounts} />}
+            {currentPage === "transfer" && <TransferPage dispatch={dispatch} accounts={state.accounts} stateError={state.error} />}
         </div>
     );
 }
