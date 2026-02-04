@@ -36,6 +36,7 @@ export function appReducer(state: AppState, action: Action): AppState {
                 return {
                     ...state,
                     accounts: [...state.accounts, account],
+                    error: undefined,
                 };
             }
 
@@ -44,15 +45,14 @@ export function appReducer(state: AppState, action: Action): AppState {
                     acc => acc.accountNumber === action.payload.accountNumber
                 );
 
-                if (!account) {
-                    throw new DomainError("Account not found");
-                }
+                if (!account) throw new DomainError("Account not found");
 
                 const updated = deposit(account, action.payload.amount);
 
                 return {
                     ...state,
                     accounts: replaceAccount(state.accounts, updated),
+                    error: undefined,
                 };
             }
 
@@ -61,15 +61,14 @@ export function appReducer(state: AppState, action: Action): AppState {
                     acc => acc.accountNumber === action.payload.accountNumber
                 );
 
-                if (!account) {
-                    throw new DomainError("Account not found");
-                }
+                if (!account) throw new DomainError("Account not found");
 
                 const updated = withdraw(account, action.payload.amount);
 
                 return {
                     ...state,
                     accounts: replaceAccount(state.accounts, updated),
+                    error: undefined,
                 };
             }
 
@@ -81,9 +80,7 @@ export function appReducer(state: AppState, action: Action): AppState {
                     acc => acc.accountNumber === action.payload.to
                 );
 
-                if (!from || !to) {
-                    throw new DomainError("Account not found");
-                }
+                if (!from || !to) throw new DomainError("Account not found");
 
                 const { from: updatedFrom, to: updatedTo } = transfer(
                     from,
@@ -94,12 +91,11 @@ export function appReducer(state: AppState, action: Action): AppState {
                 return {
                     ...state,
                     accounts: state.accounts.map(acc => {
-                        if (acc.accountNumber === updatedFrom.accountNumber)
-                            return updatedFrom;
-                        if (acc.accountNumber === updatedTo.accountNumber)
-                            return updatedTo;
+                        if (acc.accountNumber === updatedFrom.accountNumber) return updatedFrom;
+                        if (acc.accountNumber === updatedTo.accountNumber) return updatedTo;
                         return acc;
                     }),
+                    error: undefined,
                 };
             }
 
@@ -110,9 +106,9 @@ export function appReducer(state: AppState, action: Action): AppState {
         if (e instanceof DomainError) {
             return {
                 ...state,
+                error: e.message, 
             };
         }
-
         throw e;
     }
 }

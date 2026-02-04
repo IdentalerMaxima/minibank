@@ -1,57 +1,50 @@
-import { useState, type Dispatch } from "react";
+import { useState, useEffect, type Dispatch } from "react";
 import type { Action } from "../../app/actions";
-import type { Account } from "../../domain/Account";
+import type { AppState } from "../../app/state";
 import './CreateAccountForm.css';
 
 type CreateAccountFormProps = {
-    accounts: Account[];
+    state: AppState;
     dispatch: Dispatch<Action>;
 };
 
-export function CreateAccountForm({ accounts, dispatch }: CreateAccountFormProps) {
+export function CreateAccountForm({ state, dispatch }: CreateAccountFormProps) {
     const [ownerName, setOwnerName] = useState("");
     const [accountNumber, setAccountNumber] = useState("");
     const [accountType, setAccountType] = useState<"normal" | "savings">("normal");
-    const [error, setError] = useState<string>("");
-    const [success, setSuccess] = useState<string>("");
+    const [success, setSuccess] = useState("");
+
+    useEffect(() => {
+        if (state.error) {
+            setSuccess("");
+        }
+    }, [state.error]);
+
+    useEffect(() => {
+        if (!state.error && accountNumber) {
+            setSuccess(`Account ${accountNumber} created successfully!`);
+            setOwnerName("");
+            setAccountNumber("");
+            setAccountType("normal");
+        }
+    }, [state.error]);
 
     const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        setError("");
         setSuccess("");
 
-        const accRegex = /^\d{3}-\d{7}-\d{2}$/;
-        if (!accRegex.test(accountNumber)) {
-            setError("Invalid account number format, valid format example: 555-1111111-58");
-            return;
-        }
-
-        const exists = accounts.some(acc => acc.accountNumber === accountNumber);
-        if (exists) {
-            setError(`Account number ${accountNumber} already exists`);
-            return;
-        }
-
-        try {
-            dispatch({
-                type: "CREATE_ACCOUNT",
-                payload: {
-                    kind: accountType,
-                    accountNumber,
-                    ownerName,
-                },
-            });
-
-            setOwnerName("");
-            setAccountNumber("");
-            setAccountType("normal");
-            setSuccess(`Account ${accountNumber} created successfully!`);
-
-        } catch (err: any) {
-            setError(err.message);
-        }
+        dispatch({
+            type: "CREATE_ACCOUNT",
+            payload: {
+                kind: accountType,
+                accountNumber,
+                ownerName,
+            },
+        });
     };
+
+    const accPattern = "\\d{3}-\\d{7}-\\d{2}";
 
     return (
         <form onSubmit={handleSubmit}>
@@ -74,6 +67,8 @@ export function CreateAccountForm({ accounts, dispatch }: CreateAccountFormProps
                     value={accountNumber}
                     onChange={(e) => setAccountNumber(e.target.value)}
                     required
+                    pattern={accPattern}
+                    title="Account number must be in format XXX-XXXXXXX-XX"
                 />
             </div>
 
@@ -89,7 +84,8 @@ export function CreateAccountForm({ accounts, dispatch }: CreateAccountFormProps
                 </select>
             </div>
 
-            {error && <div className="form-error">{error}</div>}
+            {state.error && <div className="form-error">{state.error}</div>}
+
             {success && <div className="form-success">{success}</div>}
 
             <button type="submit">Create Account!</button>

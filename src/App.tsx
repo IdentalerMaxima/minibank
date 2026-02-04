@@ -21,7 +21,7 @@ export function App() {
             <h1>MiniBank</h1>
             <NavBar setPage={setCurrentPage} />
 
-            {currentPage === "create" && <CreateAccountPage accounts={state.accounts} dispatch={dispatch} />}
+            {currentPage === "create" && <CreateAccountPage state={state} dispatch={dispatch} />}
             {currentPage === "deposit" && <DepositPage dispatch={dispatch} />}
             {currentPage === "list" && <ListAllPage accounts={state.accounts} />}
             {currentPage === "withdraw" && <WithdrawPage dispatch={dispatch} />}
