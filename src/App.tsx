@@ -22,7 +22,7 @@ export function App() {
             <NavBar setPage={setCurrentPage} />
 
             {currentPage === "create" && <CreateAccountPage stateError={state.error} dispatch={dispatch} />}
-            {currentPage === "deposit" && <DepositPage state={state} dispatch={dispatch} />}
+            {currentPage === "deposit" && <DepositPage stateError={state.error} dispatch={dispatch} />}
             {currentPage === "list" && <ListAllPage accounts={state.accounts} />}
             {currentPage === "withdraw" && <WithdrawPage dispatch={dispatch} />}
             {currentPage === "transfer" && <TransferPage dispatch={dispatch} accounts={state.accounts} />}
