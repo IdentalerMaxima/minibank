@@ -5,6 +5,11 @@ type ListAllPageProps = {
     accounts: Account[];
 };
 
+function getInterestRate(account: Account) {
+    if (account.type === "savings") return account.interestRate;
+    return "-";
+}
+
 export function ListAllPage({ accounts }: ListAllPageProps) {
     return (
         <div className="table-container">
@@ -25,7 +30,7 @@ export function ListAllPage({ accounts }: ListAllPageProps) {
                             <td>{account.ownerName}</td>
                             <td>{account.type}</td>
                             <td>{account.balance}</td>
-                            <td>{account.type === "savings" ? account.interestRate : "-"}</td>
+                            <td>{getInterestRate(account)}</td>
                         </tr>
                     ))}
                 </tbody>
