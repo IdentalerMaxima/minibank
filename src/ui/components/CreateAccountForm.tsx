@@ -12,6 +12,7 @@ export function CreateAccountForm({ dispatch, onError, onSuccess }: CreateAccoun
     const [ownerName, setOwnerName] = useState("");
     const [accountNumber, setAccountNumber] = useState("");
     const [accountType, setAccountType] = useState<"normal" | "savings">("normal");
+    const [interestRate, setInterestRate] = useState<number>(0);
 
     const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -22,12 +23,14 @@ export function CreateAccountForm({ dispatch, onError, onSuccess }: CreateAccoun
                     kind: accountType,
                     accountNumber,
                     ownerName,
+                    ...(accountType === "savings" ? { interestRate } : {}),
                 },
             });
             if (onSuccess) onSuccess();
             setOwnerName("");
             setAccountNumber("");
             setAccountType("normal");
+            setInterestRate(0);
         } catch (err: any) {
             if (onError) onError(err.message);
         }
@@ -68,6 +71,22 @@ export function CreateAccountForm({ dispatch, onError, onSuccess }: CreateAccoun
                     <option value="savings">Savings</option>
                 </select>
             </div>
+
+            {accountType === "savings" && (
+                <div className="form-field">
+                    <label htmlFor="interestRate">Interest Rate (%):</label>
+                    <input
+                        id="interestRate"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={interestRate}
+                        onChange={e => setInterestRate(Number(e.target.value))}
+                        required
+                    />
+                </div>
+            )}
+
 
             <button type="submit">Create Account!</button>
         </form>

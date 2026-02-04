@@ -5,6 +5,7 @@ export type Action =
         kind: "normal" | "savings";
         accountNumber: string;
         ownerName: string;
+        interestRate?: number;
       };
     }
   | {

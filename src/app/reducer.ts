@@ -30,7 +30,8 @@ export function appReducer(state: AppState, action: Action): AppState {
                 const account = createAccount(
                     action.payload.kind,
                     action.payload.accountNumber,
-                    action.payload.ownerName
+                    action.payload.ownerName,
+                    action.payload.kind === "savings" ? action.payload.interestRate : undefined
                 );
 
                 return {
