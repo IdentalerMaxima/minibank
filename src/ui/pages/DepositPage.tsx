@@ -9,7 +9,7 @@ type DepositPageProps = {
 export function DepositPage({ dispatch }: DepositPageProps) {
     return (
         <div>
-            <h1> Deposit Page </h1>
+            <h2> Deposit Page </h2>
             <DepositForm
                 dispatch={dispatch}
             >

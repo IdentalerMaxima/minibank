@@ -9,7 +9,7 @@ type WithdrawPageProps = {
 export function WithdrawPage({ dispatch }: WithdrawPageProps) {
     return (
         <div>
-            <h1> Withdraw Page </h1>
+            <h2> Withdraw Page </h2>
             <WithdrawForm
                 dispatch={dispatch}
             >

@@ -11,7 +11,7 @@ type TransferPageProps = {
 export function TransferPage({ dispatch, accounts }: TransferPageProps) {
     return (
         <div>
-            <h1> Transfer Page </h1>
+            <h2> Transfer Page </h2>
             <TransferForm
                 accounts={accounts}
                 dispatch={dispatch}

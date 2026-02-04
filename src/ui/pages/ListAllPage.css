@@ -1,0 +1,22 @@
+.table-container {
+    display: flex;
+    justify-content: center; 
+    padding: 2rem;
+}
+
+table {
+    border-collapse: collapse;
+    width: 80%; 
+    min-width: 400px;
+    text-align: left;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 0.5rem 1rem;
+}
+
+th {
+    font-weight: 600;
+}
+

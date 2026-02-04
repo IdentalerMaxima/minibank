@@ -1,15 +1,16 @@
-import { useState, type Dispatch } from "react"
-import type { Action } from "../../app/actions"
+import { useState, type Dispatch } from "react";
+import type { Action } from "../../app/actions";
+import './WithdrawForm.css';
 
 type WithdrawFormProps = {
     dispatch: Dispatch<Action>;
-}   
- 
+};
+
 export function WithdrawForm({ dispatch }: WithdrawFormProps) {
     const [accountNumber, setAccountNumber] = useState("");
     const [amount, setAmount] = useState("");
 
-    function handleSumbit(e: React.SyntheticEvent) {
+    function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
         e.preventDefault();
 
         dispatch({
@@ -19,39 +20,37 @@ export function WithdrawForm({ dispatch }: WithdrawFormProps) {
                 amount: Number(amount),
             },
         });
-    }
-    
-    return (
-        <form onSubmit={handleSumbit}>
 
-            <div>
-                <label>
-                Your Account Number:
-                    <input 
-                        type="text"
-                        value={accountNumber}
-                        onChange={e => setAccountNumber(e.target.value)}
-                        required
-                    >
-                    </input>
-                </label>
+        setAccountNumber("");
+        setAmount("");
+    }
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <div className="form-field">
+                <label htmlFor="accountNumber">Your Account Number:</label>
+                <input
+                    id="accountNumber"
+                    type="text"
+                    value={accountNumber}
+                    onChange={(e) => setAccountNumber(e.target.value)}
+                    required
+                />
             </div>
 
-            <div>
-                <label>
-                Amount:
-                    <input 
-                        type="number"
-                        value={amount}
-                        onChange={e => setAmount(e.target.value)}
-                        required
-                    >
-                    </input>
-                </label>
+            <div className="form-field">
+                <label htmlFor="amount">Amount:</label>
+                <input
+                    id="amount"
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    required
+                />
             </div>
 
             <button type="submit">Withdraw</button>
-
         </form>
     );
 }
+

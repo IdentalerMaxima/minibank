@@ -7,11 +7,12 @@ import { DepositPage } from "./ui/pages/DepositPage";
 import { ListAllPage } from "./ui/pages/ListAllPage";
 import { WithdrawPage } from "./ui/pages/WithdrawPage";
 import { TransferPage } from "./ui/pages/TransferPage";
+import './App.css';
 
 const initialState: AppState = { accounts: [] };
 
 export function App() {
-    const [currentPage, setCurrentPage] = useState<"list" | "create" | "deposit" | "withdraw" | "transfer">("list");
+    const [currentPage, setCurrentPage] = useState<"list" | "create" | "deposit" | "withdraw" | "transfer">("create");
 
     const [state, dispatch] = useReducer(appReducer, initialState);
 

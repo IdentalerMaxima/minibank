@@ -9,9 +9,9 @@ export function NavBar({ setPage }: NavBarProps) {
         <nav>
             <button onClick={() => setPage("create")}>Create Account</button>
             <button onClick={() => setPage("list")}>List Accounts</button>
-            <button onClick={() => setPage("deposit")}>Deposit</button>
-            <button onClick={() => setPage("withdraw")}>Withdraw</button>
             <button onClick={() => setPage("transfer")}>Transfer</button>
+            <button onClick={() => setPage("withdraw")}>Withdraw</button>
+            <button onClick={() => setPage("deposit")}>Deposit</button>
         </nav>
     );
 }

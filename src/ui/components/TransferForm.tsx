@@ -1,18 +1,19 @@
-import { useState, type Dispatch } from "react"
-import type { Action } from "../../app/actions"
+import { useState, type Dispatch } from "react";
+import type { Action } from "../../app/actions";
 import type { Account } from "../../domain/Account";
+import './TransferForm.css';
 
 type TransferFormProps = {
     accounts: Account[];
     dispatch: Dispatch<Action>;
-}   
- 
+};
+
 export function TransferForm({ dispatch, accounts }: TransferFormProps) {
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
     const [amount, setAmount] = useState("");
 
-    function handleSumbit(e: React.SyntheticEvent) {
+    function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
         e.preventDefault();
 
         dispatch({
@@ -23,53 +24,49 @@ export function TransferForm({ dispatch, accounts }: TransferFormProps) {
                 amount: Number(amount),
             },
         });
+
+        setFrom("");
+        setTo("");
+        setAmount("");
     }
-    
+
     return (
-        <form onSubmit={handleSumbit}>
-
-            <div>
-                <label>
-                Your Account Number:
-                    <input 
-                        type="text"
-                        value={from}
-                        onChange={e => setFrom(e.target.value)}
-                        required
-                    >
-                    </input>
-                </label>
+        <form onSubmit={handleSubmit}>
+            <div className="form-field">
+                <label htmlFor="from">Your Account Number:</label>
+                <input
+                    id="from"
+                    type="text"
+                    value={from}
+                    onChange={(e) => setFrom(e.target.value)}
+                    required
+                />
             </div>
 
-            <div>
-                <label>
-                Target Account Number:
-                    <input 
-                        type="text"
-                        value={to}
-                        onChange={e => setTo(e.target.value)}
-                        required
-                    >
-                    </input>
-                </label>
+            <div className="form-field">
+                <label htmlFor="to">Target Account Number:</label>
+                <input
+                    id="to"
+                    type="text"
+                    value={to}
+                    onChange={(e) => setTo(e.target.value)}
+                    required
+                />
             </div>
 
-
-            <div>
-                <label>
-                Amount:
-                    <input 
-                        type="number"
-                        value={amount}
-                        onChange={e => setAmount(e.target.value)}
-                        required
-                    >
-                    </input>
-                </label>
+            <div className="form-field">
+                <label htmlFor="amount">Amount:</label>
+                <input
+                    id="amount"
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    required
+                />
             </div>
 
             <button type="submit">Transfer</button>
-
         </form>
     );
 }
+
