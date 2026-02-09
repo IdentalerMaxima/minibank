@@ -6,6 +6,7 @@ export type Action =
         accountNumber: string;
         ownerName: string;
         interestRate?: number;
+        currency?: string;
       };
     }
   | {
