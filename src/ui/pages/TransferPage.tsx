@@ -1,24 +1,24 @@
-import type { Dispatch } from "react"
-import type { Action } from "../../app/actions"
+import type { Dispatch } from "react";
+import type { Action } from "../../app/actions";
 import { TransferForm } from "../components/TransferForm";
 import type { Account } from "../../domain/Account";
 
 type TransferPageProps = {
-    accounts: Account[];
-    dispatch: Dispatch<Action>;
     stateError?: string;
+    dispatch: Dispatch<Action>;
+    accounts: Account[];
 }
 
-export function TransferPage({ dispatch, accounts, stateError }: TransferPageProps) {
+export function TransferPage({ stateError, dispatch, accounts }: TransferPageProps) {
     return (
         <div>
-            <h2> Transfer Page </h2>
+            <h2>Transfer Page</h2>
             <TransferForm
-                accounts={accounts}
-                dispatch={dispatch}
                 stateError={stateError}
-            >
-            </TransferForm>
+                dispatch={dispatch}
+                accounts={accounts}
+            />
         </div>
     );
 }
+

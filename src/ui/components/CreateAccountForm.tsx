@@ -1,5 +1,6 @@
 import { useState, useEffect, type Dispatch } from "react";
 import type { Action } from "../../app/actions";
+import type { Currency } from "../../domain/Account";
 import './CreateAccountForm.css';
 
 type CreateAccountFormProps = {
@@ -8,17 +9,18 @@ type CreateAccountFormProps = {
 };
 
 export function CreateAccountForm({ stateError, dispatch }: CreateAccountFormProps) {
+    const DEFAULT_INTEREST_RATE = 1.5;
+
     const [ownerName, setOwnerName] = useState("");
     const [accountNumber, setAccountNumber] = useState("");
     const [accountType, setAccountType] = useState<"normal" | "savings">("normal");
-    const [interestRate, setInterestRate] = useState<number>(0);
+    const [interestRate, setInterestRate] = useState<number>(DEFAULT_INTEREST_RATE);
+    const [currency, setCurrency] = useState<Currency>("EUR");
     const [success, setSuccess] = useState("");
     const [lastAccount, setLastAccount] = useState("");
 
     useEffect(() => {
-        if (stateError) {
-            setSuccess("");
-        }
+        if (stateError) setSuccess("");
     }, [stateError]);
 
     useEffect(() => {
@@ -27,7 +29,8 @@ export function CreateAccountForm({ stateError, dispatch }: CreateAccountFormPro
             setOwnerName("");
             setAccountNumber("");
             setAccountType("normal");
-            setInterestRate(0);
+            setInterestRate(DEFAULT_INTEREST_RATE);
+            setCurrency("EUR");
             setLastAccount("");
         }
     }, [stateError, lastAccount]);
@@ -36,20 +39,17 @@ export function CreateAccountForm({ stateError, dispatch }: CreateAccountFormPro
         e.preventDefault();
         setSuccess("");
 
-        try {
-            dispatch({
-                type: "CREATE_ACCOUNT",
-                payload: {
-                    kind: accountType,
-                    accountNumber,
-                    ownerName,
-                    ...(accountType === "savings" ? { interestRate } : {}),
-                },
-            });
-            setLastAccount(accountNumber);
-        } catch (err: any) {
-            console.error(err);
-        }
+        dispatch({
+            type: "CREATE_ACCOUNT",
+            payload: {
+                kind: accountType,
+                accountNumber,
+                ownerName,
+                ...(accountType === "savings" ? { interestRate } : {}),
+                currency,
+            },
+        });
+        setLastAccount(accountNumber);
     };
 
     const accPattern = "\\d{3}-\\d{7}-\\d{2}";
@@ -98,14 +98,24 @@ export function CreateAccountForm({ stateError, dispatch }: CreateAccountFormPro
                     <input
                         id="interestRate"
                         type="number"
-                        min="0"
-                        step="0.01"
-                        value={interestRate}
-                        onChange={e => setInterestRate(Number(e.target.value))}
-                        required
+                        value={DEFAULT_INTEREST_RATE}
+                        disabled
+                        readOnly
                     />
                 </div>
             )}
+
+            <div className="form-field">
+                <label htmlFor="currency">Currency:</label>
+                <select
+                    id="currency"
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value as Currency)}
+                >
+                    <option value="EUR">EUR</option>
+                    {/* <option value="GBP">GBP</option> */}
+                </select>
+            </div>
 
             <button type="submit">Create Account!</button>
 
