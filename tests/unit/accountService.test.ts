@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createAccount, deposit, DomainError, withdraw, transfer } from "../src/domain/accountService.ts";
+import { createAccount, deposit, DomainError, withdraw, transfer } from "../../src/domain/accountService.ts";
 
 describe("create account", () => {
     it("should create a normal account with EUR welcome bonus", () => {
@@ -23,7 +23,9 @@ describe("create account", () => {
         const acc = createAccount("savings", "555-3333333-58", "Alice", 2.5, "USD");
 
         expect(acc.balance).toBe(0);
-        expect(acc.interestRate).toBe(2.5);
+        if (acc.type === "savings") {
+            expect(acc.interestRate).toBe(2.5);
+        }
         expect(acc.currency).toBe("USD");
     });
 });
