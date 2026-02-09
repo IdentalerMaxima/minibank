@@ -11,6 +11,7 @@ export function CreateAccountForm({ stateError, dispatch }: CreateAccountFormPro
     const [ownerName, setOwnerName] = useState("");
     const [accountNumber, setAccountNumber] = useState("");
     const [accountType, setAccountType] = useState<"normal" | "savings">("normal");
+    const [interestRate, setInterestRate] = useState<number>(0);
     const [success, setSuccess] = useState("");
     const [lastAccount, setLastAccount] = useState("");
 
@@ -26,6 +27,7 @@ export function CreateAccountForm({ stateError, dispatch }: CreateAccountFormPro
             setOwnerName("");
             setAccountNumber("");
             setAccountType("normal");
+            setInterestRate(0);
             setLastAccount("");
         }
     }, [stateError, lastAccount]);
@@ -34,16 +36,20 @@ export function CreateAccountForm({ stateError, dispatch }: CreateAccountFormPro
         e.preventDefault();
         setSuccess("");
 
-        dispatch({
-            type: "CREATE_ACCOUNT",
-            payload: {
-                kind: accountType,
-                accountNumber,
-                ownerName,
-            },
-        });
-
-        setLastAccount(accountNumber);
+        try {
+            dispatch({
+                type: "CREATE_ACCOUNT",
+                payload: {
+                    kind: accountType,
+                    accountNumber,
+                    ownerName,
+                    ...(accountType === "savings" ? { interestRate } : {}),
+                },
+            });
+            setLastAccount(accountNumber);
+        } catch (err: any) {
+            console.error(err);
+        }
     };
 
     const accPattern = "\\d{3}-\\d{7}-\\d{2}";
@@ -85,6 +91,21 @@ export function CreateAccountForm({ stateError, dispatch }: CreateAccountFormPro
                     <option value="savings">Savings</option>
                 </select>
             </div>
+
+            {accountType === "savings" && (
+                <div className="form-field">
+                    <label htmlFor="interestRate">Interest Rate (%):</label>
+                    <input
+                        id="interestRate"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={interestRate}
+                        onChange={e => setInterestRate(Number(e.target.value))}
+                        required
+                    />
+                </div>
+            )}
 
             <button type="submit">Create Account!</button>
 
