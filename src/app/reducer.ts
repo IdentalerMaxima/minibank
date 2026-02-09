@@ -31,7 +31,8 @@ export function appReducer(state: AppState, action: Action): AppState {
                     action.payload.kind,
                     action.payload.accountNumber,
                     action.payload.ownerName,
-                    action.payload.kind === "savings" ? action.payload.interestRate : undefined
+                    action.payload.kind === "savings" ? action.payload.interestRate : undefined,
+                    action.payload.currency
                 );
 
                 return {
@@ -64,6 +65,11 @@ export function appReducer(state: AppState, action: Action): AppState {
 
                 if (!account) throw new DomainError("Account not found");
 
+                if (from.currency !== to.currency) {
+                    throw new DomainError("Cross-currency transfers not supported yet");
+                }
+
+
                 const updated = withdraw(account, action.payload.amount);
 
                 return {
@@ -82,6 +88,11 @@ export function appReducer(state: AppState, action: Action): AppState {
                 );
 
                 if (!from || !to) throw new DomainError("Account not found");
+
+                if (from.currency !== to.currency) {
+                    throw new DomainError("Cross-currency transfers not supported yet");
+                }
+
 
                 const { from: updatedFrom, to: updatedTo } = transfer(
                     from,
