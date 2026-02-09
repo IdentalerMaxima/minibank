@@ -1,33 +1,36 @@
 export type Action =
-  | {
-      type: "CREATE_ACCOUNT";
-      payload: {
+| {
+    type: "CREATE_ACCOUNT";
+    payload: {
         kind: "normal" | "savings";
         accountNumber: string;
         ownerName: string;
         interestRate?: number;
-      };
-    }
-  | {
-      type: "DEPOSIT";
-      payload: {
+        currency?: string;
+    };
+}
+| {
+    type: "DEPOSIT";
+    payload: {
         accountNumber: string;
         amount: number;
-      };
-    }
-  | {
-      type: "WITHDRAW";
-      payload: {
+    };
+}
+| {
+    type: "WITHDRAW";
+    payload: {
         accountNumber: string;
         amount: number;
-      };
-    }
-  | {
-      type: "TRANSFER";
-      payload: {
+    };
+}
+| {
+    type: "TRANSFER";
+    payload: {
         from: string;
         to: string;
         amount: number;
-      };
     };
- 
+}
+| { type: "CLEAR_ERROR" };
+
+

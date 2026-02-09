@@ -2,16 +2,23 @@ type NavBarProps = {
     setPage: (page:
         "list" | "create" | "deposit" | "withdraw" | "transfer"
     ) => void;
+    clearError: () => void;
 }
 
-export function NavBar({ setPage }: NavBarProps) {
+export function NavBar({ setPage, clearError }: NavBarProps) {
+    const handleClick = (page: "list" | "create" | "deposit" | "withdraw" | "transfer") => {
+        clearError();
+        setPage(page);
+    };
+
     return (
         <nav>
-            <button onClick={() => setPage("create")}>Create Account</button>
-            <button onClick={() => setPage("list")}>List Accounts</button>
-            <button onClick={() => setPage("transfer")}>Transfer</button>
-            <button onClick={() => setPage("withdraw")}>Withdraw</button>
-            <button onClick={() => setPage("deposit")}>Deposit</button>
+            <button onClick={() => handleClick("create")}>Create Account</button>
+            <button onClick={() => handleClick("list")}>List Accounts</button>
+            <button onClick={() => handleClick("transfer")}>Transfer</button>
+            <button onClick={() => handleClick("withdraw")}>Withdraw</button>
+            <button onClick={() => handleClick("deposit")}>Deposit</button>
         </nav>
     );
 }
+

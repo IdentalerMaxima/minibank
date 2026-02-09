@@ -23,15 +23,14 @@ export function appReducer(state: AppState, action: Action): AppState {
                     acc => acc.accountNumber === action.payload.accountNumber
                 );
 
-                if (exists) {
-                    throw new DomainError("Account number already exists");
-                }
+                if (exists) throw new DomainError("Account number already exists");
 
                 const account = createAccount(
                     action.payload.kind,
                     action.payload.accountNumber,
                     action.payload.ownerName,
-                    action.payload.kind === "savings" ? action.payload.interestRate : undefined
+                    action.payload.kind === "savings" ? action.payload.interestRate : undefined,
+                    action.payload.currency
                 );
 
                 return {
@@ -83,6 +82,10 @@ export function appReducer(state: AppState, action: Action): AppState {
 
                 if (!from || !to) throw new DomainError("Account not found");
 
+                if (from.currency !== to.currency) {
+                    throw new DomainError("Cross-currency transfers not supported yet");
+                }
+
                 const { from: updatedFrom, to: updatedTo } = transfer(
                     from,
                     to,
@@ -100,15 +103,15 @@ export function appReducer(state: AppState, action: Action): AppState {
                 };
             }
 
+            case "CLEAR_ERROR":
+                return { ...state, error: undefined };
+
             default:
                 return state;
         }
     } catch (e) {
         if (e instanceof DomainError) {
-            return {
-                ...state,
-                error: e.message, 
-            };
+            return { ...state, error: e.message };
         }
         throw e;
     }
